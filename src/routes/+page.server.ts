@@ -5,7 +5,22 @@ import { env } from '$env/dynamic/private';
 import { EC2 } from '@aws-sdk/client-ec2';
 
 export const load = (async () => {
-    return {};
+    const ec2 = new EC2({
+        region: env.PRIVATE_AWS_REGION,
+
+        credentials: {
+            accessKeyId: env.PRIVATE_AWS_ACCESS_KEY,
+            secretAccessKey: env.PRIVATE_AWS_ACCESS_KEY_SECRET
+        }
+    })
+
+    const instanceId = 'i-037dd598360a632ae'
+
+    const resp = await ec2.describeInstanceStatus({ InstanceIds: [instanceId], IncludeAllInstances: true })
+    const instanceStatus = resp.InstanceStatuses?.[0]?.InstanceState
+    const currentStatus = instanceStatus?.Name ?? 'unknown'
+    
+    return { currentStatus };
 }) satisfies PageServerLoad;
 
 export const actions = {
