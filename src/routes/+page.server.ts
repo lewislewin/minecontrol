@@ -3,8 +3,13 @@ import type { PageServerLoad } from './$types';
 import { env } from '$env/dynamic/private';
 
 import { EC2 } from '@aws-sdk/client-ec2';
+import { error } from 'console';
 
 export const load = (async () => {
+    const instanceId: string | undefined = env.PRIVATE_AWS_INSTANCE_ID
+    if (!instanceId) {
+        throw error(500, 'AWS instance ID not configured')
+    }
     const ec2 = new EC2({
         region: env.PRIVATE_AWS_REGION,
 
@@ -14,25 +19,35 @@ export const load = (async () => {
         }
     })
 
-    const instanceId = 'i-037dd598360a632ae'
+    const [statusResp, describeResp] = await Promise.all([
+        ec2.describeInstanceStatus({
+            InstanceIds: [instanceId],
+            IncludeAllInstances: true,
+        }),
+        ec2.describeInstances({
+            InstanceIds: [instanceId],
+        })
+    ])
 
-    const resp = await ec2.describeInstanceStatus({ InstanceIds: [instanceId], IncludeAllInstances: true })
-    const instanceStatus = resp.InstanceStatuses?.[0]?.InstanceState
-    const currentStatus = instanceStatus?.Name ?? 'unknown'
-    
-    return { currentStatus };
+    const currentStatus = statusResp.InstanceStatuses?.[0]?.InstanceState?.Name ?? 'unknown'
+    const inst = describeResp.Reservations?.[0]?.Instances?.[0]
+    const publicIp = inst?.PublicIpAddress ?? 'unknown'
+
+    return { currentStatus, publicIp };
 }) satisfies PageServerLoad;
 
 export const actions = {
     default: async ({request}) => {
+        const instanceId: string | undefined = env.PRIVATE_AWS_INSTANCE_ID
+        if (!instanceId) {
+            throw error(500, 'AWS instance ID not configured')
+        }
         const data = await request.formData()
         const password = data.get('password')
 
         if (password !== env.PRIVATE_SECRET_PASSWORD) {
             return { success: false, error: 'bad password'}
         }
-
-        const instanceId = 'i-037dd598360a632ae'
 
         const ec2 = new EC2({
             region: env.PRIVATE_AWS_REGION,

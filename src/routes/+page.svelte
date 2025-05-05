@@ -7,6 +7,8 @@
 	const currentStatus = data.currentStatus;
 	const isRunning = $derived(currentStatus === 'running');
 
+	const serverIp = data.publicIp
+
 	let submitting = $state(false);
 </script>
 
@@ -18,7 +20,7 @@
 
 <div class="mx-auto mt-12 max-w-lg rounded-2xl bg-white p-6 shadow">
 	<h1 class="mb-4 text-2xl font-semibold">Start MC Server</h1>
-
+	<p>Current IP: { serverIp }</p>
 	<form
 		method="post"
 		use:enhance={() => {
