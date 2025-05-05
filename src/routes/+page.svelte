@@ -1,16 +1,17 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import type { PageProps } from './$types';
-	import Spinner from '$lib/Spinner.svelte';
+	import { enhance } from '$app/forms'
+	import type { PageProps } from './$types'
+	import Spinner from '$lib/Spinner.svelte'
 
-	let { data, form }: PageProps = $props();
+	let { data, form }: PageProps = $props()
 
-	const currentStatus = data.currentStatus;
-	const isRunning = $derived(currentStatus === 'running');
+	const currentStatus = data.currentStatus
+	const isRunning = $derived(currentStatus === 'running')
+	const canBeStarted = $derived(currentStatus === 'stopped')
 
-	const serverIp = data.publicIp;
+	const serverIp = data.publicIp
 
-	let submitting = $state(false);
+	let submitting = $state(false)
 </script>
 
 <svelte:head>
@@ -21,7 +22,7 @@
 	<h1 class="mb-4 text-2xl font-semibold">Start MC Server</h1>
 	<p>Current IP: {serverIp}</p>
 	<p>Current Status: {currentStatus}</p>
-	{#if !isRunning}
+	{#if canBeStarted}
 		<form
 			method="post"
 			use:enhance={() => {
