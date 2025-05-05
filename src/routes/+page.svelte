@@ -6,7 +6,6 @@
 	let { data, form }: PageProps = $props()
 
 	const currentStatus = data.currentStatus
-	const isRunning = $derived(currentStatus === 'running')
 	const canBeStarted = $derived(currentStatus === 'stopped')
 
 	const serverIp = data.publicIp
@@ -59,8 +58,8 @@
 			</button>
 		</form>
 	{/if}
-	{#if isRunning}
-		<p class="text-red-600">Cannot start server as it is already running</p>
+	{#if !canBeStarted}
+		<p class="text-red-600">Server cannot be started</p>
 	{/if}
 
 	{#if form}
