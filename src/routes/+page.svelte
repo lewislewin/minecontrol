@@ -73,7 +73,7 @@
 	{#if form}
 		{#if form.success}
 			<p class="mt-4 text-green-600">
-				Started: {form.started.join(', ')}
+				Started: {form.started?.join(', ')}
 			</p>
 		{:else}
 			<p class="mt-4 text-red-600">
