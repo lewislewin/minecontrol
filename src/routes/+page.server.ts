@@ -18,7 +18,7 @@ export const actions = {
         if (!id) throw error(500, 'AWS_INSTANCE_ID not set')
         const form = await request.formData()
         if (form.get('password') !== env.PRIVATE_SECRET_PASSWORD) {
-            return { success: false, error: 'bad password' }
+            return { success: false, error: 'Incorrect Password' }
         }
         try {
             await startInstance(id)
