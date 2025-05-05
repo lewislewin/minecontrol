@@ -1,8 +1,7 @@
-import type { Actions } from '@sveltejs/kit';
+import { error, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { env } from '$env/dynamic/private';
 
-import { error } from 'console';
 import { getInstanceInfo, startInstance } from '$lib/awsService';
 
 export const load = (async () => {
