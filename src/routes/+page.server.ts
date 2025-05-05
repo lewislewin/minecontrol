@@ -4,13 +4,13 @@ import { env } from '$env/dynamic/private';
 
 import { getInstanceInfo, startInstance } from '$lib/awsService';
 
-export const load = (async () => {
+export const load: PageServerLoad = async () => {
     const id = env.PRIVATE_AWS_INSTANCE_ID
     if (!id) throw error(500, 'Missing AWS_INSTANCE_ID')
     const { state: currentStatus, publicIp } = await getInstanceInfo(id)
 
     return { currentStatus, publicIp };
-}) satisfies PageServerLoad;
+};
 
 export const actions = {
     default: async ({ request }) => {

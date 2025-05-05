@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import type { PageProps } from './$types'
-	import Spinner from '$lib/Spinner.svelte'
+	import Spinner from '$lib/components/Spinner.svelte'
 
 	let { data, form }: PageProps = $props()
 
