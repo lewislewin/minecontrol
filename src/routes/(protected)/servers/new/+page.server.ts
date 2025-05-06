@@ -1,6 +1,7 @@
 import type { Actions, PageServerLoad } from './$types'
 import { listCredentials } from '$lib/server/services/credentialService'
 import { addServer } from '$lib/server/services/serverService'
+import { redirect } from '@sveltejs/kit'
 
 export const load: PageServerLoad = async ({ locals }) => {
   const creds = await listCredentials(locals.db, locals.user.id)
@@ -22,6 +23,6 @@ export const actions: Actions = {
       password,
       name,
     )
-    return { success: true, id }
+    return redirect(301, '/servers/' + id)
   }
 }
