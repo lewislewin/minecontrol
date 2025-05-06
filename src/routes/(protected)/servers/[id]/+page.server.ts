@@ -19,8 +19,6 @@ export const actions: Actions = {
     const form = await request.formData()
     const password = form.get('password') as string
 
-    console.log(password)
-    console.log(srv.password)
     if (!locals.user && password !== srv.password) {
       return { success: false, error: "Unauthorized."}
     }
