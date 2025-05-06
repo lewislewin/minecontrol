@@ -6,6 +6,7 @@ declare global {
 		interface Locals {
 			db: ReturnType<typeof import('$lib/server/db').getDb>
 			env: Platform['env']
+			user: { id: string; name: string }
 		}
 		// interface PageData {}
 		// interface PageState {}

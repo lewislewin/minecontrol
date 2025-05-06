@@ -1,5 +1,5 @@
 
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 export const users = sqliteTable('users', {
     id: text('id').primaryKey(),
@@ -16,6 +16,7 @@ export const awsCredentials = sqliteTable('aws_credentials', {
     accessKeyId: text('access_key_id').notNull(),
     secretAccessKey: text('secret_access_key').notNull(),
     region: text('region').notNull(),
+    name: text('name'),
 })
 
 export const servers = sqliteTable('servers', {
@@ -28,5 +29,13 @@ export const servers = sqliteTable('servers', {
         .references(() => awsCredentials.id),
     instanceId: text('instance_id').notNull(),
     password: text('password').notNull(),
-    token: text('token').notNull().unique(),
+    name: text('name')
+})
+
+export const sessions = sqliteTable('sessions', {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+        .notNull()
+        .references(() => users.id),
+    expires: integer('expires').notNull()
 })

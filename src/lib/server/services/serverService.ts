@@ -3,22 +3,26 @@ import { servers } from '../schema'
 import { eq } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
 
-export async function addServer(db: ReturnType<typeof import('../db').getDb>, userId: string, credentialId: string, instanceId: string, rawPassword: string) {
-    const token = randomUUID()
+export async function addServer(db: ReturnType<typeof import('../db').getDb>, userId: string, credentialId: string, instanceId: string, rawPassword: string, name: string) {
+    const id = randomUUID()
     await db.insert(servers).values({
-        id: randomUUID(),
+        id,
         userId,
         credentialId,
         instanceId,
         password: rawPassword,
-        token,
+        name,
     })
-    return { token }
+    return { id }
 }
 
-export async function getServerByToken(db: ReturnType<typeof import('../db').getDb>, token: string) {
+export async function getServerById(db: ReturnType<typeof import('../db').getDb>, id: string) {
     return await db.select()
         .from(servers)
-        .where(eq(servers.token, token))
+        .where(eq(servers.id, id))
         .get()
+}
+
+export async function listServers(db: ReturnType<typeof import('../db').getDb>, userId: string) {
+    return await db.select().from(servers).where(eq(servers.userId, userId)).all()
 }

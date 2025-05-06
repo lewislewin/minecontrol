@@ -21,3 +21,7 @@ export async function verifyUser(db: ReturnType<typeof import('../db').getDb>, e
     const ok = await bcrypt.compare(password, user.password)
     return ok ? user : null
 }
+
+export async function findUserById(db: ReturnType<typeof import('../db').getDb>, id: string) {
+    return await db.select().from(users).where(eq(users.id, id)).get()
+}
