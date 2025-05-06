@@ -2,6 +2,11 @@
 	let { data } = $props();
 
 	const servers = data.servers;
+
+	function copyLink(id: string) {
+		const url = `${location.origin}/servers/${id}`
+		navigator.clipboard.writeText(url)
+	}
 </script>
 
 <svelte:head>
@@ -26,9 +31,16 @@
 				<div class="card-body">
 					<h2 class="card-title">{server.name ?? server.id}</h2>
 					<p>{server.instanceId}</p>
-					<div class="card-actions justify-end">
-						<a class="btn btn-primary" href="/servers/{server.id}">View</a>
-						<a class="btn" href="/servers/{server.id}/edit">Edit</a>
+					<div class="card-actions justify-between">
+						<div>
+							<button class="btn" onclick={() => copyLink(server.id)}>
+								Copy Link
+							</button>
+						</div>
+						<div>
+							<a class="btn btn-primary" href="/servers/{server.id}">View</a>
+							<a class="btn" href="/servers/{server.id}/edit">Edit</a>
+						</div>
 					</div>
 				</div>
 			</div>
