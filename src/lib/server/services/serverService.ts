@@ -1,10 +1,10 @@
 // lib/server/services/serverService.ts
 import { servers } from '../schema'
 import { eq } from 'drizzle-orm'
-import { randomUUID } from 'crypto'
+import { v4 as uuidv4 } from 'uuid';
 
 export async function addServer(db: ReturnType<typeof import('../db').getDb>, userId: string, credentialId: string, instanceId: string, rawPassword: string, name: string) {
-    const id = randomUUID()
+    const id = uuidv4()
     await db.insert(servers).values({
         id,
         userId,
