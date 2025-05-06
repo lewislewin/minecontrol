@@ -1,12 +1,15 @@
 <script lang="ts">
   import { enhance } from '$app/forms'
 
-  // grab any returned failure data
+  // pull in any returned `fail()` data
   let { form } = $props()
 
-  // bind email so it survives errors
-  let email      = $state(form?.email ?? '')
+  // bind name/email so they survive a validation failure
+  let name     = $state(form?.name    ?? '')
+  let email    = $state(form?.email   ?? '')
   let submitting = $state(false)
+
+  // derive the error message
   const errorMsg = $derived(form?.error)
 
   function onEnhance() {
@@ -23,7 +26,7 @@
   use:enhance={onEnhance}
   class="card w-full max-w-md mx-auto mt-12 p-6 bg-base-100 shadow-lg"
 >
-  <h1 class="text-2xl font-semibold text-center mb-4">Log In</h1>
+  <h1 class="text-2xl font-semibold text-center mb-4">Register</h1>
 
   {#if errorMsg}
     <div class="alert alert-error mb-4">
@@ -33,15 +36,27 @@
 
   <div class="form-control mb-4">
     <label class="label">
+      <span class="label-text">Name</span>
+    </label>
+    <input
+      name="name"
+      bind:value={name}
+      type="text"
+      placeholder="Your full name"
+      class="input input-bordered"
+    />
+  </div>
+
+  <div class="form-control mb-4">
+    <label class="label">
       <span class="label-text">Email</span>
     </label>
     <input
       name="email"
-      type="email"
       bind:value={email}
+      type="email"
       placeholder="you@example.com"
       class="input input-bordered"
-      autofocus
     />
   </div>
 
@@ -62,11 +77,11 @@
     class="btn btn-primary w-full"
     disabled={submitting}
   >
-    {#if submitting}Logging in…{:else}Log In{/if}
+    {#if submitting}Registering…{:else}Register{/if}
   </button>
 
   <p class="text-center text-sm text-gray-500 mt-4">
-    Don’t have an account?
-    <a href="/register" class="link link-primary">Register here</a>
+    Already have an account?
+    <a href="/login" class="link link-primary">Log in</a>
   </p>
 </form>
