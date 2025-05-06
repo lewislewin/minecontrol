@@ -2,11 +2,11 @@
 import bcrypt from 'bcryptjs'
 import { users } from '../schema'
 import { eq } from 'drizzle-orm'
-import { randomUUID } from 'crypto'
+import { v4 as uuidv4 } from 'uuid';
 
 export async function createUser(db: ReturnType<typeof import('../db').getDb>, { name, email, password }: { name: string, email: string, password: string }) {
     const hash = await bcrypt.hash(password, 10)
-    const id = randomUUID()
+    const id = uuidv4()
     await db.insert(users).values({ id, name, email, password: hash })
     return { id, name, email }
 }

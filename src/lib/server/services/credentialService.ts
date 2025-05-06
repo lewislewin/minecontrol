@@ -1,7 +1,7 @@
 // lib/server/services/credentialService.ts
 import { awsCredentials } from '../schema'
 import { eq } from 'drizzle-orm'
-import { randomUUID } from 'crypto'
+import { v4 as uuidv4 } from 'uuid';
 
 export type AwsCredInput = {
     accessKeyId: string
@@ -19,7 +19,7 @@ export type AwsCredResult = {
 
 export async function addCredential(db: ReturnType<typeof import('../db').getDb>, userId: string, creds: AwsCredInput): Promise<AwsCredResult> {
     const { accessKeyId, secretAccessKey, region, name} = creds
-    const id = randomUUID()
+    const id = uuidv4()
     await db.insert(awsCredentials).values({
         id, userId, accessKeyId, secretAccessKey, region, name
     })

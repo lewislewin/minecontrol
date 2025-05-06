@@ -1,11 +1,11 @@
 // lib/server/services/sessionService.ts
 import { sessions } from '../schema'
-import { randomUUID } from 'crypto'
+import { v4 as uuidv4 } from 'uuid';
 import { add, getUnixTime } from 'date-fns'
 import { gt, eq } from 'drizzle-orm'
 
 export async function createSession(db, userId:string, maxAgeSec = 60*60*24*7) {
-  const id = randomUUID()
+  const id = uuidv4()
   const expires = getUnixTime(add(new Date(), { seconds: maxAgeSec }))
   await db.insert(sessions).values({ id, userId, expires })
   return { id, expires }
