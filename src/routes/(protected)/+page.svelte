@@ -43,7 +43,7 @@
 
             <div class="card-actions justify-between mt-4">
               <button
-                on:click={() => copyLink(srv.token)}
+                on:click={() => copyLink(srv.id)}
                 class="btn btn-sm btn-outline"
               >
                 Copy Start Link
