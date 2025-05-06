@@ -9,11 +9,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
   
   try {
     const info = await getInstanceInfo(srv.instanceId)
+    return { srv, info }
   } catch (error) {
     const reason = `${srv.name} has an invalid instance ID or cannot be found, redirecting to edit.`
     throw redirect(303, `/servers/${srv.id}/edit?error=${encodeURIComponent(reason)}`)
   }
-  return { srv, info }
+
 }
 
 export const actions: Actions = {
