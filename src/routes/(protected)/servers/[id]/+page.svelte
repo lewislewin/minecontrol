@@ -38,7 +38,7 @@
 	onMount(() => {
 		const interval = setInterval(() => {
 			reload()
-		}, 5000)
+		}, 10 * 1000)
 
 		return () => {
 			clearInterval(interval)
