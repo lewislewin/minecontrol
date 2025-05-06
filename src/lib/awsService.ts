@@ -31,3 +31,7 @@ export async function getInstanceInfo(instanceId: string) {
 export function startInstance(instanceId: string) {
     return ec2.startInstances({InstanceIds: [instanceId]})
 }
+
+export function stopInstance(instanceId: string) {
+    return ec2.stopInstances({InstanceIds: [instanceId]})
+}

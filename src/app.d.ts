@@ -3,10 +3,19 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			db: ReturnType<typeof import('$lib/server/db').getDb>
+			env: Platform['env']
+			user: { id: string; name: string }
+		}
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
+		interface Platform {
+			env: {
+				DB: D1Database
+			}
+		}
 	}
 }
 
