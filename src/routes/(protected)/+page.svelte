@@ -4,6 +4,10 @@
 	const servers = data.servers;
 </script>
 
+<svelte:head>
+	<title>Home | minecontrol</title>
+</svelte:head>
+
 <ul class="mb-10">
 	<p>Quick Links</p>
 	<li>
@@ -13,7 +17,6 @@
 
 <h1 class="mb-4 text-2xl font-bold">My Servers</h1>
 
-<a href="/servers/new" class="btn btn-primary">+ Add new</a>
 {#await servers}
 	Loading...
 {:then servers}
@@ -31,3 +34,5 @@
 		{/each}
 	</ul>
 {/await}
+
+<a href="/servers/new" class="btn btn-primary">+ Add new</a>

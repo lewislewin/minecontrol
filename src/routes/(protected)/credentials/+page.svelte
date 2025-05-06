@@ -9,7 +9,7 @@
   </script>
   
   <svelte:head>
-    <title>My AWS Credentials</title>
+    <title>Credentials | minecontrol</title>
   </svelte:head>
   
   <div class="max-w-md mx-auto mt-8 space-y-4">

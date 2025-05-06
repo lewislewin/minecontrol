@@ -13,13 +13,15 @@ export const actions: Actions = {
     const instanceId = f.get('instanceId') as string
     const credentialId = f.get('credentialId') as string
     const password = f.get('password') as string
-    const { token } = await addServer(
+    const name = f.get('name') as string
+    const { id } = await addServer(
       locals.db,
       locals.user.id,
       credentialId,
       instanceId,
-      password
+      password,
+      name,
     )
-    return { success:true, token }
+    return { success: true, id }
   }
 }

@@ -12,12 +12,26 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 }
 
 export const actions: Actions = {
-  start: async ({ params, locals }) => {
+  start: async ({ params, locals, request }) => {
     const srv = await getServerById(locals.db, params.id)
     if (!srv) throw error(500, "Server was not defined")
+    
+    const form = await request.formData()
+    const password = form.get('password') as string
+
+    console.log(password)
+    console.log(srv.password)
+    if (!locals.user && password !== srv.password) {
+      return { success: false, error: "Unauthorized."}
+    }
       
-    await startInstance(srv.instanceId)
-    return { started: true }
+    try {
+      await startInstance(srv.instanceId)
+    } catch (err) {
+      return { success: false, error: err.message}
+    }
+  
+    return { success: true }
   },
 
   stop: async ({ params, locals }) => {
@@ -25,14 +39,15 @@ export const actions: Actions = {
     if (!srv) throw error(500, "Server wasnt defined")
 
     await stopInstance(srv.instanceId)
-    return { stopped: true }
+    return { success: true }
   },
 
-  reboot: async ({ params, locals }) => {
+  restart: async ({ params, locals }) => {
     const srv = await getServerById(locals.db, params.id)
     if (!srv) throw error(500, "Server wasnt defined")
 
-      await stopInstance(srv.instanceId)
-      return {rebooted: true}
+    await stopInstance(srv.instanceId)
+    await startInstance(srv.instanceId)
+    return { success: true }
   }
 }
