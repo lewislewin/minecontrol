@@ -3,7 +3,7 @@
   
     let { form } = $props()
   
-    let submitting = false
+    let submitting = $state(false)
     let newCred: { accessKeyId: string, region: string } | null = null
   
     const onEnhance = () => {
@@ -26,6 +26,11 @@
     <h1 class="text-2xl font-semibold mb-4">Add Credential</h1>
   
     <form method="post" use:enhance={onEnhance} class="space-y-4">
+      <label class="block">
+        <span class="font-medium">Credential Name</span>
+        <input name="name" required class="mt-1 w-full border px-3 py-2 rounded"/>
+      </label>
+
       <label class="block">
         <span class="font-medium">Access Key ID</span>
         <input name="accessKeyId" required class="mt-1 w-full border px-3 py-2 rounded"/>

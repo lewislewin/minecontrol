@@ -19,7 +19,7 @@
 		<span>AWS Credential set</span>
 		<select name="credentialId" class="w-full border p-2">
 			{#each data.creds as c}
-				<option value={c.id}>{c.region} – {c.id.slice(0, 6)}…</option>
+				<option value={c.id}>{c.name} – {c.id.slice(0, 10)}…</option>
 			{/each}
 		</select>
 	</label>
