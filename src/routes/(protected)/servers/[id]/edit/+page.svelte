@@ -63,7 +63,7 @@
 				<option value="" disabled>Select…</option>
 				{#each creds as c}
 					<option value={c.id} selected={c.id === server.credentialId}>
-						{c.region} – {c.accessKeyId.slice(0, 6)}…
+						{c.name} – {c.id.slice(0, 6)}…
 					</option>
 				{/each}
 			</select>
