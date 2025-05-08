@@ -1,7 +1,7 @@
 import { verifyUser } from '$lib/server/services/userService'
 import { createSession } from '$lib/server/services/sessionService'
 import { redirect, type Actions } from '@sveltejs/kit'
-import type { PageServerLoad } from '../$types'
+import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = () => ({})   // nothing
 
@@ -12,8 +12,7 @@ export const actions: Actions = {
     const pwd   = f.get('password')?.toString() ?? ''
 
     const user = await verifyUser(locals.db, email, pwd)
-    if (!user) return { success:false, error:'bad creds' }
-
+    if (!user) return { success:false, error:'Invalid email or password' }
     const { id: sid, expires } = await createSession(locals.db, user.id)
     cookies.set('sid', sid, {
       path:'/', httpOnly:true, sameSite:'lax',

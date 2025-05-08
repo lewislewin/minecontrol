@@ -1,10 +1,10 @@
 import { findUserById } from "$lib/server/services/userService";
-import type { PageServerLoad } from "./$types";
+import type { PageServerLoad } from "../$types";
 
-
-export const load: PageServerLoad = async ({ locals, params }) => {
-
+export const load: PageServerLoad = async ({ locals }) => {
+    const user = await findUserById(locals.db, locals.user.id)
+    
     return {
-        user: await findUserById(locals.db, params.id)
+        user
     }
 }

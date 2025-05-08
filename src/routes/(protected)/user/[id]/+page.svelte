@@ -6,5 +6,5 @@
 </script>
 
 {#if user}
-    {data.user?.email}
+    {data.user?.name}
 {/if}

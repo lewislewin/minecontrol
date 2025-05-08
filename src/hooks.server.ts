@@ -13,7 +13,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     const sess = await getSession(db, sid)
     if (sess) {
       const user = await findUserById(db, sess.userId)
-      if (user) event.locals.user = { id:user.id, name:user.name }
+      if (user) event.locals.user = { id: user.id, name: user.name }
     }
   }
 
