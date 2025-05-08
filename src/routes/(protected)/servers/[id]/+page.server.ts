@@ -1,57 +1,68 @@
-import type { Actions, PageServerLoad } from './$types'
+// src/routes/servers/[id]/+page.server.ts
+import type { PageServerLoad, Actions } from './$types'
+import { error, redirect, fail } from '@sveltejs/kit'
 import { getServerById } from '$lib/server/services/serverService'
-import { getInstanceInfo, startInstance, stopInstance } from '$lib/awsService'
-import { error, redirect } from '@sveltejs/kit'
+import { getCredential } from '$lib/server/services/credentialService'
+import {
+  getInstanceInfo,
+  startInstance,
+  stopInstance
+} from '$lib/awsService'
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({ params, locals, url }) => {
   const srv = await getServerById(locals.db, params.id)
-  if (!srv) throw error(500, "Server was not defined.")
-  
+  if (!srv) throw error(404, 'Server not found')
+
+  const cred = await getCredential(locals.db, srv.credentialId)
+  if (!cred) throw error(500, 'Linked credential not found')
+
   try {
-    const info = await getInstanceInfo(srv.instanceId)
+    const info = await getInstanceInfo(cred, srv.instanceId)
     return { srv, info }
-  } catch (error) {
+  } catch {
     const reason = `${srv.name} has an invalid instance ID or cannot be found, redirecting to edit.`
     throw redirect(303, `/servers/${srv.id}/edit?error=${encodeURIComponent(reason)}`)
   }
-
 }
 
 export const actions: Actions = {
   start: async ({ params, locals, request }) => {
     const srv = await getServerById(locals.db, params.id)
-    if (!srv) throw error(500, "Server was not defined")
-    
-    const form = await request.formData()
+    if (!srv) throw error(404, 'Server not found')
+
+    const cred = await getCredential(locals.db, srv.credentialId)
+    if (!cred) throw error(500, 'Linked credential missing')
+
+    const form     = await request.formData()
     const password = form.get('password') as string
 
-    if (!locals.user && password !== srv.password) {
-      return { success: false, error: "Unauthorized."}
-    }
-      
-    try {
-      await startInstance(srv.instanceId)
-    } catch (err) {
-      throw error(500, err.message)
-    }
-  
+    if (!locals.user && password !== srv.password)
+      return fail(401, { error: 'Unauthorized.' })
+
+    await startInstance(cred, srv.instanceId)
     return { success: true }
   },
 
   stop: async ({ params, locals }) => {
     const srv = await getServerById(locals.db, params.id)
-    if (!srv) throw error(500, "Server wasnt defined")
+    if (!srv) throw error(404, 'Server not found')
 
-    await stopInstance(srv.instanceId)
+    const cred = await getCredential(locals.db, srv.credentialId)
+    if (!cred) throw error(500, 'Linked credential missing')
+
+    await stopInstance(cred, srv.instanceId)
     return { success: true }
   },
 
   restart: async ({ params, locals }) => {
     const srv = await getServerById(locals.db, params.id)
-    if (!srv) throw error(500, "Server wasnt defined")
+    if (!srv) throw error(404, 'Server not found')
 
-    await stopInstance(srv.instanceId)
-    await startInstance(srv.instanceId)
+    const cred = await getCredential(locals.db, srv.credentialId)
+    if (!cred) throw error(500, 'Linked credential missing')
+
+    await stopInstance(cred, srv.instanceId)
+    await startInstance(cred, srv.instanceId)
     return { success: true }
   }
 }
